@@ -2,6 +2,18 @@
 import {Link} from 'react-router-dom';
 import S from './style.scss';
 
+let propTypes = {
+  article_id:PT.number,
+  article_title:PT.string,
+  previewContent:PT.string,
+  user_id:PT.number,
+  user_name:PT.string,
+  createdAt:PT.string,
+  avatar:PT.string,
+  user_intro:PT.string
+}
+
+//显示一条文章
 export default function Preview(props){
 
     let {
@@ -43,3 +55,5 @@ export default function Preview(props){
         </div>
     );
 }
+
+Preview.propTypes=propTypes;

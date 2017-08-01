@@ -2,6 +2,8 @@ import {Link} from 'react-router-dom';
 import S from './style.scss';
 import Author from './Author';
 
+
+//作者列表
 export default function Recommend({authors}){
 
     return (

@@ -4,6 +4,13 @@ import S from './style.scss';
 
 import Validation from 'util/validation';
 
+let propTypes = {
+  handleSigninAjax:PT.func,
+  signinMsg:PT.object,
+  handleClearMsg:PT.func
+}
+
+//登录
 export default class SignInPanel extends Component{
 
     constructor(props){
@@ -14,6 +21,7 @@ export default class SignInPanel extends Component{
           nameErr:false,
           pwdErr:false
         };
+
 
         this.validator = new Validation();
 
@@ -32,6 +40,11 @@ export default class SignInPanel extends Component{
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePwd = this.handleChangePwd.bind(this);
         this.handleSignin = this.handleSignin.bind(this);
+    }
+
+    componentWillUnmount(){
+      //主要为了在重新切换回次页时不显示之前的提示信息
+      this.props.handleClearMsg();
     }
 
     handleChangeUsername(event){
@@ -54,6 +67,7 @@ export default class SignInPanel extends Component{
         pwdErr:msg
       });
     }
+
     handleSignin(event){
 
       event.preventDefault();
@@ -88,11 +102,19 @@ export default class SignInPanel extends Component{
 
         let resInfo = null;
         if(signinMsg){
-          resInfo = (
-            <div className="ui message error">
-              <p>{signinMsg}</p>
-            </div>
-          );
+          if(signinMsg.code===0){
+            resInfo = (
+              <div className="ui message positive">
+                <p>{signinMsg.msg}</p>
+              </div>
+            );
+          }else{
+            resInfo = (
+              <div className="ui message error">
+                <p>{signinMsg,msg}</p>
+              </div>
+            );
+          }
         }
 
         return (
@@ -134,3 +156,5 @@ export default class SignInPanel extends Component{
         );
     }
 }
+
+SignInPanel.propTypes = propTypes;

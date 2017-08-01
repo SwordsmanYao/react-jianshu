@@ -3,6 +3,10 @@ import Preview from './Preview';
 import S from './style.scss';
 import cfg from 'config/config.json';
 
+let propTypes = {
+  previews:PT.array
+}
+//文章显示列表
 export default function PreviewList(props){
 
     let {previews} = props;
@@ -47,3 +51,5 @@ export default function PreviewList(props){
         </div>
     );
 }
+
+PreviewList.propTypes = propTypes;

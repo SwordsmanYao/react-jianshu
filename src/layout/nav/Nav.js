@@ -1,7 +1,57 @@
 import {Link,NavLink} from 'react-router-dom';
 import S from './style.scss';
 
-export default function Nav(){
+let propTypes = {
+  userinfo:PT.object,
+  logOut:PT.func
+}
+
+//导航
+export default function Nav(props){
+
+  let {userinfo,logOut} = props;
+  let userLink = null;
+  if(userinfo){
+    userLink = (
+      <NavLink
+        to="/my_page"
+        className={`${S.avatar} item`}
+        activeClassName="active"
+      >
+        <img
+          src={userinfo.avatar}
+          className="ui image avatar"
+          alt=""
+        />
+        <div className={S.dropDown}>
+          <p
+            onClick={(event)=>{
+              event.stopPropagation();
+              event.preventDefault();
+              logOut();
+            }}
+          >注销</p>
+        </div>
+      </NavLink>
+    );
+  }else{
+    userLink =
+    [
+      (
+        <NavLink to="/sign_in"
+          className={`item`}
+          activeClassName="active"
+          key={1}
+        >登录</NavLink>
+      ),(
+        <NavLink to="/sign_up"
+          className={`item`}
+          activeClassName="active"
+          key={2}
+        >注册</NavLink>
+      )
+    ];
+  }
   return (
     <div className={`ui fixed secondary pointing menu ${S.nav}`}>
       <div className="ui container">
@@ -13,14 +63,7 @@ export default function Nav(){
           activeClassName="active"
         >首页</NavLink>
         <div className="menu right">
-          <NavLink to="/sign_in"
-            className={`item`}
-            activeClassName="active"
-          >登录</NavLink>
-          <NavLink to="/sign_up"
-            className={`item`}
-            activeClassName="active"
-          >注册</NavLink>
+          {userLink}
           <NavLink to="/write"
             className={`item`}
             activeClassName="active"
@@ -30,3 +73,5 @@ export default function Nav(){
     </div>
   );
 }
+
+Nav.propTypes = propTypes;

@@ -1,5 +1,7 @@
 import {Link} from 'react-router-dom';
 import cfg from 'config/config.json';
+
+//显示一个作者
 export default function Author({user}){
     let {user_name, avatar} = user;
 

@@ -1,6 +1,8 @@
 import {NavLink} from 'react-router-dom';
 import style from './style.scss';
 
+
+//登录和注册页面公共部分
 export default function Panel({children}){
 
     return (

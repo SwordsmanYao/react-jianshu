@@ -4,6 +4,12 @@ import S from './style.scss';
 
 import Validation from 'util/validation';
 
+let propTypes = {
+  handleSignupAjax:PT.func,
+  signupMsg:PT.object,
+  handleClearMsg:PT.func
+}
+//注册
 export default class SignUpPanel extends Component{
 
     constructor(props){
@@ -36,6 +42,10 @@ export default class SignUpPanel extends Component{
         this.handleChangeCfmPwd = this.handleChangeCfmPwd.bind(this);
         this.handleSignup = this.handleSignup.bind(this);
 
+    }
+
+    componentWillUnmount(){
+      this.props.handleClearMsg();
     }
 
     handleChangeUsername(event){
@@ -111,11 +121,19 @@ export default class SignUpPanel extends Component{
 
       let resInfo = null;
       if(signupMsg){
-        resInfo = (
-          <div className="ui message error">
-            <p>{signupMsg}</p>
-          </div>
-        );
+        if(signupMsg.code===0){
+          resInfo = (
+            <div className="ui message positive">
+              <p>{signupMsg.msg}</p>
+            </div>
+          );
+        }else{
+          resInfo = (
+            <div className="ui message error">
+              <p>{signupMsg,msg}</p>
+            </div>
+          );
+        }
       }
 
       return (
@@ -165,3 +183,5 @@ export default class SignUpPanel extends Component{
       );
     }
 }
+
+SignUpPanel.propTypes = propTypes;

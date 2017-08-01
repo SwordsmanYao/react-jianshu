@@ -3,7 +3,7 @@ import PreviewList from 'preview/PreviewList';
 import Recommend from 'components/home/Recommend';
 
 import cfg from 'config/config.json';
-
+//首页
 export default class Home extends React.Component{
     constructor(props){
         super(props);

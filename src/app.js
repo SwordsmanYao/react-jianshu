@@ -5,6 +5,9 @@ import Frame from 'frame/Frame';
 require('semantic/dist/semantic.css');
 require('semantic/dist/semantic.js');
 
+$.ajaxSetup({
+  xhrFields:{withCredentials:true}//跨域请求是发送cookie认证
+});
 
 ReactDOM.render(
     <Router>
