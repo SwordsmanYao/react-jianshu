@@ -31,6 +31,7 @@ export default class SignInPanel extends Component{
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePwd = this.handleChangePwd.bind(this);
+        this.handleSignin = this.handleSignin.bind(this);
     }
 
     handleChangeUsername(event){
@@ -53,10 +54,28 @@ export default class SignInPanel extends Component{
         pwdErr:msg
       });
     }
+    handleSignin(event){
 
+      event.preventDefault();
+      event.stopPropagation();
+
+      let {validator} = this;
+      let {username,pwd} = this.state;
+      let nameErr = validator.valiOneByValue('username',username);
+      let pwdErr = validator.valiOneByValue('pwd',pwd);
+
+      if(!nameErr && !pwdErr){
+        this.props.handleSigninAjax({
+          username:username,
+          passw:pwd
+        });
+      }
+
+    }
     render(){
-        let {handleChangeUsername,handleChangePwd} = this;
+        let {handleChangeUsername,handleChangePwd,handleSignin} = this;
         let {username,pwd,nameErr,pwdErr} = this.state;
+        let {signinMsg} = this.props;
 
         let nameErrMag = nameErr?(
           <p className={S.err}>{nameErr}</p>
@@ -66,10 +85,21 @@ export default class SignInPanel extends Component{
           <p className={S.err}>{pwdErr}</p>
         ):null;
 
+        let resInfo = null;
+        if(signinMsg){
+          resInfo = (
+            <div className="ui message error">
+              <p>{signinMsg}</p>
+            </div>
+          );
+        }
+
         return (
             <div className={S.sign_panel}>
+                {resInfo}
                 <form
                     className="ui form"
+                    onSubmit={handleSignin}
                 >
                     <div className={`field ${nameErr?'error':''}`}>
                         <input

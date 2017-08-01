@@ -9,11 +9,12 @@ export default class SignIn extends React.Component{
     }
 
     render(){
-
-        return (
-            <EntryPanel >
-                <SignInPanel />
-            </EntryPanel>
-        );
+      let {handleSigninAjax,signinMsg} = this.props;
+    
+      return (
+          <EntryPanel >
+              <SignInPanel {...{handleSigninAjax,signinMsg}} />
+          </EntryPanel>
+      );
     }
 }
