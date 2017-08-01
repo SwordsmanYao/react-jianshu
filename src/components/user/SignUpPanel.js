@@ -34,6 +34,8 @@ export default class SignUpPanel extends Component{
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
         this.handleChangePwd = this.handleChangePwd.bind(this);
         this.handleChangeCfmPwd = this.handleChangeCfmPwd.bind(this);
+        this.handleSignup = this.handleSignup.bind(this);
+
     }
 
     handleChangeUsername(event){
@@ -70,11 +72,31 @@ export default class SignUpPanel extends Component{
         cfmPwdErr:passwDom.value===cfPasswDom.value?false:'输入与密码不匹配'
       });
     }
+    handleSignup(event){
 
+      event.preventDefault();
+      event.stopPropagation();
+
+      let {validator} = this;
+      let {username,pwd,cfmPwd} = this.state;
+      let nameErr = validator.valiOneByValue('username',username);
+      let pwdErr = validator.valiOneByValue('pwd',pwd);
+      let cfmPwdErr = pwd===cfmPwd?false:'输入与密码不匹配';
+
+      if(!nameErr && !pwdErr && !cfmPwdErr){
+        this.props.handleSignupAjax({
+          username:username,
+          passw:pwd,
+          cfPassw:cfmPwd
+        });
+      }else{
+        this.setState({nameErr,pwdErr,cfmPwdErr});
+      }
+    }
     render(){
-      let {handleChangeUsername,handleChangePwd,handleChangeCfmPwd} = this;
+      let {handleChangeUsername,handleChangePwd,handleChangeCfmPwd,handleSignup} = this;
       let {username,pwd,cfmPwd,nameErr,pwdErr,cfmPwdErr} = this.state;
-
+      let {signupMsg} = this.props;
       let nameErrMag = nameErr?(
         <p className={S.err}>{nameErr}</p>
       ):null;
@@ -87,10 +109,21 @@ export default class SignUpPanel extends Component{
         <p className={S.err}>{cfmPwdErr}</p>
       ):null;
 
+      let resInfo = null;
+      if(signupMsg){
+        resInfo = (
+          <div className="ui message error">
+            <p>{signupMsg}</p>
+          </div>
+        );
+      }
+
       return (
           <div className={S.sign_panel}>
+              {resInfo}
               <form
                   className="ui form"
+                  onSubmit={handleSignup}
               >
                   <div className={`field ${nameErr?'error':''}`}>
                       <input

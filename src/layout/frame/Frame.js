@@ -13,9 +13,11 @@ export default class Frame extends React.Component{
         super(props);
         this.state = {
           userinfo:null,
-          signinMsg:null
+          signinMsg:null,
+          signupMsg:null
         }
         this.handleSigninAjax = this.handleSigninAjax.bind(this);
+        this.handleSignupAjax = this.handleSignupAjax.bind(this);
     }
 
     handleSigninAjax(reqData){
@@ -33,29 +35,22 @@ export default class Frame extends React.Component{
           });
         }
       });
-
-      // $.ajax({
-      //    url:`${cfg.url}/login`,
-      //    dataType:'jsonp',
-      //    processData: false,
-      //    type:'post',
-      //    data:reqData,
-      //    success:function(data){
-      //      alert(data);
-      //    },
-      //    error:function(XMLHttpRequest, textStatus, errorThrown) {
-      //      debugger
-      //      alert(XMLHttpRequest.status);
-      //      alert(XMLHttpRequest.readyState);
-      //      alert(textStatus);
-      //    }
-      //  });
     }
+    handleSignupAjax(reqData){
+      $.post(`${cfg.url}/register`,reqData)
+      .done(result=>{
+        this.setState({
+          signupMsg:result.msg
+        });
+      });
+    }
+
+
 
     render(){
 
-      let {handleSigninAjax} = this;
-      let {signinMsg} = this.state;
+      let {handleSigninAjax,handleSignupAjax} = this;
+      let {signinMsg,signupMsg} = this.state;
         return (
             <div className={S.layout}>
                 <Nav/>
@@ -70,7 +65,16 @@ export default class Frame extends React.Component{
                     />
                   )
                 }/>
-                <Route exact path="/sign_up" component={SignUp}/>
+                <Route exact path="/sign_up" render={
+                  props=>(
+                    <SignUp
+                      {...{
+                        handleSignupAjax,
+                        signupMsg
+                      }}
+                    />
+                  )
+                }/>
             </div>
         );
     }

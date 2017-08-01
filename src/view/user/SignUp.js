@@ -8,9 +8,10 @@ export default class extends React.Component{
     }
 
     render(){
+      let {handleSignupAjax,signupMsg} = this.props;
         return (
             <EntryPanel >
-                <SignUpPanel />
+                <SignUpPanel {...{handleSignupAjax,signupMsg}} />
             </EntryPanel>
         );
     }

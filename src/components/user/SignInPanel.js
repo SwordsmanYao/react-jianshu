@@ -69,8 +69,9 @@ export default class SignInPanel extends Component{
           username:username,
           passw:pwd
         });
+      }else{
+        this.setState({nameErr,pwdErr});
       }
-
     }
     render(){
         let {handleChangeUsername,handleChangePwd,handleSignin} = this;
