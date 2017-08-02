@@ -4,12 +4,13 @@ import S from './style.scss';
 import cfg from 'config/config.json';
 
 let propTypes = {
-  previews:PT.array
+  previews:PT.array,
+  initMyPage:PT.func
 }
 //文章显示列表
 export default function PreviewList(props){
 
-    let {previews} = props;
+    let {previews,initMyPage} = props;
 
     previews = previews.map((elt, i)=>{
         let {
@@ -34,7 +35,8 @@ export default function PreviewList(props){
                     user_name,
                     createdAt,
                     avatar,
-                    user_intro
+                    user_intro,
+                    initMyPage
                 }}
                 key={i}
             >
