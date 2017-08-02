@@ -8,30 +8,30 @@ export default class Home extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-          previews:[],
-          authors:[]
+            previews:[],
+            authors:[]
         }
     }
 
     componentDidMount(){
 
-      $.post(`${cfg.url}/getPreview`)
-      .done(ret=>{
-        if(ret.code===0){
-          this.setState({
-            previews:ret.data
-          });
-        }
-      });
+        $.post(`${cfg.url}/getPreview`)
+        .done(ret=>{
+            if(ret.code===0){
+                this.setState({
+                    previews:ret.data
+                });
+            }
+        });
 
-      $.post(`${cfg.url}/getAuthor`)
-      .done(ret=>{
-        if(ret.code===0){
-          this.setState({
-            authors:ret.data
-          });
-        }
-      });
+        $.post(`${cfg.url}/getAuthor`)
+        .done(ret=>{
+            if(ret.code===0){
+                this.setState({
+                    authors:ret.data
+                });
+            }
+        });
     }
     render(){
 
@@ -41,16 +41,16 @@ export default class Home extends React.Component{
             <div className="ui container grid">
                 <div className="column twelve wide">
                     <PreviewList
-                      {...{
-                        previews
-                      }}
+                        {...{
+                            previews
+                        }}
                     />
                 </div>
                 <div className="column four wide">
                     <Recommend
-                      {...{
-                        authors
-                      }}
+                        {...{
+                            authors
+                        }}
                     />
                 </div>
             </div>

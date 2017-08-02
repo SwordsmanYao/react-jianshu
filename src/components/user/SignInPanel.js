@@ -5,9 +5,9 @@ import S from './style.scss';
 import Validation from 'util/validation';
 
 let propTypes = {
-  handleSigninAjax:PT.func,
-  signinMsg:PT.object,
-  handleClearMsg:PT.func
+    handleSigninAjax:PT.func,
+    signinMsg:PT.object,
+    handleClearMsg:PT.func
 }
 
 //登录
@@ -16,25 +16,25 @@ export default class SignInPanel extends Component{
     constructor(props){
         super(props);
         this.state = {
-          username:'',
-          pwd:'',
-          nameErr:false,
-          pwdErr:false
+            username:'',
+            pwd:'',
+            nameErr:false,
+            pwdErr:false
         };
 
 
         this.validator = new Validation();
 
         this.validator.addByValue('username',[
-          {strategy:'isEmpty',errorMsg:'用户名不能为空'},
-          {strategy:'hasSpace',errorMsg:'用户名不能有空格'},
-          {strategy:'maxLength:6',errorMsg:'用户名最长为6'},
+            {strategy:'isEmpty',errorMsg:'用户名不能为空'},
+            {strategy:'hasSpace',errorMsg:'用户名不能有空格'},
+            {strategy:'maxLength:6',errorMsg:'用户名最长为6'},
         ]);
 
         this.validator.addByValue('pwd',[
-          {strategy:'isEmpty',errorMsg:'密码不能为空'},
-          {strategy:'hasSpace',errorMsg:'密码不能有空格'},
-          {strategy:'maxLength:6',errorMsg:'密码最长为6'},
+            {strategy:'isEmpty',errorMsg:'密码不能为空'},
+            {strategy:'hasSpace',errorMsg:'密码不能有空格'},
+            {strategy:'maxLength:6',errorMsg:'密码最长为6'},
         ]);
 
         this.handleChangeUsername = this.handleChangeUsername.bind(this);
@@ -43,49 +43,49 @@ export default class SignInPanel extends Component{
     }
 
     componentWillUnmount(){
-      //主要为了在重新切换回次页时不显示之前的提示信息
-      this.props.handleClearMsg();
+        //主要为了在重新切换回次页时不显示之前的提示信息
+        this.props.handleClearMsg();
     }
 
     handleChangeUsername(event){
-      let {target} = event;
+        let {target} = event;
 
-      let msg = this.validator.valiOneByValue('username',target.value);
+        let msg = this.validator.valiOneByValue('username',target.value);
 
-      this.setState({
-        username:target.value,
-        nameErr:msg
-      });
+        this.setState({
+            username:target.value,
+            nameErr:msg
+        });
     }
 
     handleChangePwd(event){
-      let {target} = event;
+        let {target} = event;
 
-      let msg = this.validator.valiOneByValue('pwd',target.value);
-      this.setState({
-        pwd:target.value,
-        pwdErr:msg
-      });
+        let msg = this.validator.valiOneByValue('pwd',target.value);
+        this.setState({
+            pwd:target.value,
+            pwdErr:msg
+        });
     }
 
     handleSignin(event){
 
-      event.preventDefault();
-      event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
 
-      let {validator} = this;
-      let {username,pwd} = this.state;
-      let nameErr = validator.valiOneByValue('username',username);
-      let pwdErr = validator.valiOneByValue('pwd',pwd);
+        let {validator} = this;
+        let {username,pwd} = this.state;
+        let nameErr = validator.valiOneByValue('username',username);
+        let pwdErr = validator.valiOneByValue('pwd',pwd);
 
-      if(!nameErr && !pwdErr){
-        this.props.handleSigninAjax({
-          username:username,
-          passw:pwd
-        });
-      }else{
-        this.setState({nameErr,pwdErr});
-      }
+        if(!nameErr && !pwdErr){
+            this.props.handleSigninAjax({
+                username:username,
+                passw:pwd
+            });
+        }else{
+            this.setState({nameErr,pwdErr});
+        }
     }
     render(){
         let {handleChangeUsername,handleChangePwd,handleSignin} = this;
@@ -93,28 +93,28 @@ export default class SignInPanel extends Component{
         let {signinMsg} = this.props;
 
         let nameErrMag = nameErr?(
-          <p className={S.err}>{nameErr}</p>
+            <p className={S.err}>{nameErr}</p>
         ):null;
 
         let pwdErrMag = pwdErr?(
-          <p className={S.err}>{pwdErr}</p>
+            <p className={S.err}>{pwdErr}</p>
         ):null;
 
         let resInfo = null;
         if(signinMsg){
-          if(signinMsg.code===0){
-            resInfo = (
-              <div className="ui message positive">
-                <p>{signinMsg.msg}</p>
-              </div>
-            );
-          }else{
-            resInfo = (
-              <div className="ui message error">
-                <p>{signinMsg,msg}</p>
-              </div>
-            );
-          }
+            if(signinMsg.code===0){
+                resInfo = (
+                    <div className="ui message positive">
+                        <p>{signinMsg.msg}</p>
+                    </div>
+                );
+            }else{
+                resInfo = (
+                    <div className="ui message error">
+                        <p>{signinMsg,msg}</p>
+                    </div>
+                );
+            }
         }
 
         return (

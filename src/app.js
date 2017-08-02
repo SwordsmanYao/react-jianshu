@@ -6,12 +6,12 @@ require('semantic/dist/semantic.css');
 require('semantic/dist/semantic.js');
 
 $.ajaxSetup({
-  xhrFields:{withCredentials:true}//跨域请求是发送cookie认证
+    xhrFields:{withCredentials:true}//跨域请求是发送cookie认证
 });
 
 ReactDOM.render(
     <Router>
-      <Route path="/" component={Frame} />
+        <Route path="/" component={Frame} />
     </Router>,
     document.getElementById('root')
 );
