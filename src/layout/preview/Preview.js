@@ -36,13 +36,22 @@ function Preview(props){
             <div className="ui divider hidden"></div>
             <div className={`${S.content}`}>
                 <div className={`${S.author}`}>
-                    <Link to="/my_page"
+                    <Link to="/"
                         className="avatar"
                         onClick={event=>{
+                            //阻止默认事件
                             event.stopPropagation();
                             event.preventDefault();
-                            history.push('/my_page');
-                            initMyPage();
+                            //跳转
+                            history.push('/my_page',{
+                                userInfo:{
+                                    user_id,
+                                    user_name,
+                                    avatar,
+                                    user_intro
+                                }
+                            });
+                            initMyPage(user_id,{user_id},'所有文章');
                         }}
                     >
                         <img src={avatar} alt="" className="ui avatar image"/>

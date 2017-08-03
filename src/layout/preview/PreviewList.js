@@ -10,7 +10,7 @@ let propTypes = {
 //文章显示列表
 export default function PreviewList(props){
 
-    let {previews,initMyPage} = props;
+    let {previews,initMyPage,collectionClick} = props;
 
     previews = previews.map((elt, i)=>{
         let {
@@ -40,9 +40,32 @@ export default function PreviewList(props){
                 }}
                 key={i}
             >
-                <Link to=""
-                    className={S.tag}
-                >{collection_name}</Link>
+                {
+                    collection_id ? (
+                        <Link to=""
+                            className={S.tag}
+                            onClick={(event)=>{
+
+                                event.stopPropagation();
+                                event.preventDefault();
+
+                                collectionClick && collectionClick(
+                                    collection_id,
+                                    collection_name,
+                                    {
+                                        user_id,
+                                        user_name,
+                                        avatar,
+                                        user_intro,
+                                        collection_id,
+                                        collection_name
+                                    }
+                                )
+                            }}
+                        >{collection_name}</Link>
+                    ) : null
+                }
+
             </Preview>
         );
     });

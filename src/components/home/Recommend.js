@@ -4,7 +4,9 @@ import Author from './Author';
 
 
 //作者列表
-export default function Recommend({authors}){
+export default function Recommend(props){
+
+    let {authors,initMyPage,history} = props;
 
     return (
         <div className={S.recommend}>
@@ -17,7 +19,9 @@ export default function Recommend({authors}){
                         return (
                             <Author
                                 {...{
-                                    user: elt
+                                    user: elt,
+                                    initMyPage,
+                                    history
                                 }}
                                 key={i}
                             />);

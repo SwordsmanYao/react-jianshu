@@ -15,7 +15,7 @@ export default class Frame extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            userinfo:null,
+            userInfo:null,
             signinMsg:null,
             signupMsg:null,
             hasLoginReq:false,
@@ -26,7 +26,7 @@ export default class Frame extends React.Component{
         this.handleSigninAjax = this.handleSigninAjax.bind(this);
         this.handleSignupAjax = this.handleSignupAjax.bind(this);
         this.handleClearMsg = this.handleClearMsg.bind(this);
-        this.initUserinfo = this.initUserinfo.bind(this);
+        this.inituserInfo = this.inituserInfo.bind(this);
         this.logOut = this.logOut.bind(this);
         this.getPreview = this.getPreview.bind(this);
         this.initMyPage = this.initMyPage.bind(this);
@@ -34,18 +34,30 @@ export default class Frame extends React.Component{
 
     }
     //初始化登录人信息
-    initUserinfo(userinfo){
-        if(userinfo){
-            userinfo.avatar = cfg.url + userinfo.avatar;
+    inituserInfo(userInfo){
+
+        if(userInfo){
+            let {id,avatar,username,user_intro} = userInfo;
+
+            avatar = cfg.url + avatar;
+
+            this.setState({
+                userInfo:{
+                    user_id:id,
+                    avatar,
+                    user_name:username,
+                    user_intro
+                }
+            });
         }
-        this.setState({userinfo});
+
     }
     //ajax发送登录请求
     handleSigninAjax(reqData){
         $.post(`${cfg.url}/login`,reqData)
         .done(result=>{
             if(result.code===0){
-                this.initUserinfo(result.data);
+                this.inituserInfo(result.data);
             }
             this.setState({
                 signinMsg:result
@@ -59,7 +71,7 @@ export default class Frame extends React.Component{
         .done(result=>{
 
             if(result.code===0){
-                this.initUserinfo(result.data);
+                this.inituserInfo(result.data);
             }
             this.setState({
                 signupMsg:result
@@ -81,18 +93,33 @@ export default class Frame extends React.Component{
         $.post(`${cfg.url}/autologin`)
         .done(({code,data})=>{
             if(code===0){
-                this.initUserinfo(data);
+                this.inituserInfo(data);
             }
             //在没有返回登录人信息时页面渲染为空白
             this.setState({hasLoginReq:true});
         });
+
+        //当重新刷新页面时从location中取得用户id重新加载
+        let {state,pathname} = this.props.location;
+
+        if(state){
+            let {user_id,collection_id,collection_name} = state.userInfo;
+
+            if(pathname==='/my_page'){
+                if(collection_id){
+                    this.initMyPage(user_id,{collection_id},collection_name);
+                }else{
+                    this.initMyPage(user_id,{user_id},'所有文章');
+                }
+            }
+        }
     }
     //注销
     logOut(){
         $.post(`${cfg.url}/logout`)
         .done(({code})=>{
             if(code===0){
-                this.initUserinfo(null);
+                this.inituserInfo(null);
             }
         })
     }
@@ -109,6 +136,7 @@ export default class Frame extends React.Component{
     }
     //previewName   列表上显示的分类名字
     initMyPage(user_id,previewsData,previewsName){
+
         this.getPreview(previewsData);
 
         //获取我的文集列表数据
@@ -116,6 +144,7 @@ export default class Frame extends React.Component{
             user_id
         })
         .done(({code,data})=>{
+
             if(code===0){
                 this.setState({
                     notebooks:data,
@@ -130,8 +159,8 @@ export default class Frame extends React.Component{
     render(){
 
         let {handleSigninAjax,handleSignupAjax,handleClearMsg,logOut,initMyPage} = this;
-        let {signinMsg,signupMsg,userinfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
-
+        let {signinMsg,signupMsg,userInfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
+        let {history} = this.props;
         //在没有返回登录人信息时页面渲染为空白
         if(!hasLoginReq){
             return (
@@ -142,8 +171,10 @@ export default class Frame extends React.Component{
             <div className={S.layout}>
                 <Nav
                     {...{
-                        userinfo,
-                        logOut
+                        userInfo,
+                        logOut,
+                        history,
+                        initMyPage
                     }}
                 />
                 <Route exact path="/" render={
@@ -158,7 +189,7 @@ export default class Frame extends React.Component{
                 }/>
                 <Route exact path="/sign_in" render={
                     props=>(
-                        userinfo?(
+                        userInfo?(
                             <Redirect to="/"/>
                         ):(
                             <SignIn
@@ -174,7 +205,7 @@ export default class Frame extends React.Component{
                 }/>
                 <Route exact path="/sign_up" render={
                     props=>(
-                        userinfo?(
+                        userInfo?(
                             <Redirect to="/"/>
                         ):(
                             <SignUp
@@ -190,14 +221,20 @@ export default class Frame extends React.Component{
                 }/>
                 <Route exact path="/my_page" render={
                     props=>(
-                        <MyPage
-                            {...{
-                                myPagePreviews,
-                                notebooks,
-                                previewsName
-                            }}
-                            {...props}
-                        />
+                        props.location.state?(
+                            <MyPage
+                                {...{
+                                    myPagePreviews,
+                                    notebooks,
+                                    previewsName,
+                                    initMyPage
+                                }}
+                                {...props}
+                            />
+                        ):(
+                            <Redirect to="/"/>
+                        )
+
                     )
                 }/>
             </div>

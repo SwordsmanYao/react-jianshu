@@ -11,16 +11,32 @@ let propTypes = {
 export default class MyPage extends React.Component{
     constructor(props){
         super(props);
+        this.collectionClick = this.collectionClick.bind(this);
     }
+    collectionClick(collection_id,collection_name,userInfo){
 
+        let {history,initMyPage} = this.props;
+
+        history.push('/my_page',{userInfo});
+
+        initMyPage(userInfo.user_id,{collection_id},collection_name);
+    }
     render(){
 
-        let {previewsName,myPagePreviews,notebooks} = this.props;
+        let {previewsName,myPagePreviews,notebooks,location,initMyPage} = this.props;
+
+        let {collectionClick} = this;
+
+        let {userInfo} = location.state;
 
         return (
             <div className="ui container grid">
                 <div className="twelve wide column">
-                    <AuthorInfo/>
+                    <AuthorInfo
+                        {...{
+                            userInfo
+                        }}
+                    />
                     <div className="ui secondary pointing menu">
                         <span className="active item">
                             {previewsName}
@@ -29,14 +45,16 @@ export default class MyPage extends React.Component{
                     <PreviewList
                         {...{
                             previews:myPagePreviews,
-
+                            initMyPage,
+                            collectionClick
                         }}
                     />
                 </div>
                 <div className="four wide column">
                     <Aside
                         {...{
-                            notebooks
+                            notebooks,
+                            userInfo
                         }}
                     />
                 </div>

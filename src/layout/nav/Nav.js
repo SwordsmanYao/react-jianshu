@@ -2,24 +2,39 @@ import {Link,NavLink} from 'react-router-dom';
 import S from './style.scss';
 
 let propTypes = {
-    userinfo:PT.object,
+    userInfo:PT.object,
     logOut:PT.func
 }
 
 //导航
 export default function Nav(props){
 
-    let {userinfo,logOut} = props;
+    let {userInfo,logOut,history,initMyPage} = props;
+
+
     let userLink = null;
-    if(userinfo){
+    if(userInfo){
+
+        let {user_id,user_name} = userInfo;
+
         userLink = (
             <NavLink
                 to="/my_page"
                 className={`${S.avatar} item`}
                 activeClassName="active"
+                onClick={(event)=>{
+                    //阻止默认事件
+                    event.stopPropagation();
+                    event.preventDefault();
+                    //跳转
+                    history.push('/my_page',{
+                        userInfo
+                    });
+                    initMyPage(user_id,{user_id},'所有文章');
+                }}
             >
                 <img
-                    src={userinfo.avatar}
+                    src={userInfo.avatar}
                     className="ui image avatar"
                     alt=""
                 />
