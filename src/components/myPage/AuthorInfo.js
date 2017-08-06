@@ -1,15 +1,25 @@
-import {Link} from 'react-router-dom';
+import {Link,withRouter} from 'react-router-dom';
 import S from './style.scss';
 
-export default function AuthorInfo(props){
+function AuthorInfo(props){
 
-    let {user_name,avatar} = props.userInfo;
+    let{initMyPage,userInfo,history} = props;
+
+    let {user_name,avatar,user_id} = userInfo;
 
     return (
         <div className={S.author_info}>
             <Link
                 to="/my_page"
                 className={S.avatar}
+                onClick={(event)=>{
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    history.push('/my_page',{userInfo});
+
+                    initMyPage(user_id,{user_id},'所有文章');
+                }}
             >
                 <img src={avatar} alt="" />
             </Link>
@@ -24,3 +34,5 @@ export default function AuthorInfo(props){
         </div>
     );
 }
+
+export default withRouter(AuthorInfo);

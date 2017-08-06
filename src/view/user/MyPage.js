@@ -12,29 +12,40 @@ export default class MyPage extends React.Component{
     constructor(props){
         super(props);
         this.collectionClick = this.collectionClick.bind(this);
+        this.notebookClick = this.notebookClick.bind(this);
     }
-    collectionClick(collection_id,collection_name,userInfo){
+    collectionClick(collection_id,collection_name){
 
-        let {history,initMyPage} = this.props;
+        let {history,getPreview,changePreviewsName} = this.props;
 
-        history.push('/my_page',{userInfo});
-
-        initMyPage(userInfo.user_id,{collection_id},collection_name);
+        getPreview({collection_id});
+        changePreviewsName(collection_name);
+    }
+    notebookClick(collection_id,collection_name){
+        this.collectionClick(collection_id,collection_name);
     }
     render(){
 
-        let {previewsName,myPagePreviews,notebooks,location,initMyPage} = this.props;
+        let {previewsName,myPagePreviews,notebooks,location,initMyPage,myInfo,updateUserIntro} = this.props;
 
-        let {collectionClick} = this;
+        let {collectionClick,notebookClick} = this;
 
         let {userInfo} = location.state;
+
+        let isMe = false;
+
+        if(myInfo){
+            isMe = userInfo.user_id === myInfo.user_id;
+            userInfo = myInfo;
+        }
 
         return (
             <div className="ui container grid">
                 <div className="twelve wide column">
                     <AuthorInfo
                         {...{
-                            userInfo
+                            userInfo,
+                            initMyPage
                         }}
                     />
                     <div className="ui secondary pointing menu">
@@ -54,7 +65,10 @@ export default class MyPage extends React.Component{
                     <Aside
                         {...{
                             notebooks,
-                            userInfo
+                            userInfo,
+                            notebookClick,
+                            isMe,
+                            updateUserIntro
                         }}
                     />
                 </div>

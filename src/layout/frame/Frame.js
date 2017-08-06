@@ -1,10 +1,12 @@
 
 import {Route,Redirect} from 'react-router-dom';
 import Nav from 'nav/Nav';
-import Home from 'view/home/Home.js';
-import SignIn from 'view/user/SignIn.js'
-import SignUp from 'view/user/SignUp.js'
+import Home from 'view/home/Home';
+import SignIn from 'view/user/SignIn'
+import SignUp from 'view/user/SignUp'
 import MyPage from 'view/user/MyPage';
+import Write from 'view/write/Write';
+import LoginHint from 'layout/LoginHint';
 
 import S from './style.scss';
 
@@ -31,6 +33,7 @@ export default class Frame extends React.Component{
         this.getPreview = this.getPreview.bind(this);
         this.initMyPage = this.initMyPage.bind(this);
         this.changePreviewsName = this.changePreviewsName.bind(this);
+        this.updateUserIntro = this.updateUserIntro.bind(this);
 
     }
     //初始化登录人信息
@@ -41,15 +44,18 @@ export default class Frame extends React.Component{
 
             avatar = cfg.url + avatar;
 
-            this.setState({
-                userInfo:{
-                    user_id:id,
-                    avatar,
-                    user_name:username,
-                    user_intro
-                }
-            });
+            userInfo={
+                user_id:id,
+                avatar,
+                user_name:username,
+                user_intro
+            }
         }
+
+        this.setState({
+            userInfo:userInfo
+        });
+
 
     }
     //ajax发送登录请求
@@ -156,9 +162,17 @@ export default class Frame extends React.Component{
     changePreviewsName(previewsName){
         this.setState({previewsName});
     }
+    updateUserIntro(intro){
+        let{userInfo} = this.state;
+
+        userInfo.user_intro = intro;
+
+        this.setState({userInfo});
+
+    }
     render(){
 
-        let {handleSigninAjax,handleSignupAjax,handleClearMsg,logOut,initMyPage} = this;
+        let {handleSigninAjax,handleSignupAjax,handleClearMsg,logOut,initMyPage,getPreview,changePreviewsName,updateUserIntro} = this;
         let {signinMsg,signupMsg,userInfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
         let {history} = this.props;
         //在没有返回登录人信息时页面渲染为空白
@@ -227,7 +241,11 @@ export default class Frame extends React.Component{
                                     myPagePreviews,
                                     notebooks,
                                     previewsName,
-                                    initMyPage
+                                    initMyPage,
+                                    getPreview,
+                                    changePreviewsName,
+                                    myInfo:userInfo,
+                                    updateUserIntro
                                 }}
                                 {...props}
                             />
@@ -237,6 +255,22 @@ export default class Frame extends React.Component{
 
                     )
                 }/>
+                <Route path="/write" render={
+                    (props)=>(
+                        userInfo?(
+                            <Write
+                                {...{
+                                    userInfo
+                                }}
+                            />
+                        ):(
+                            <Redirect to="/login_hint"/>
+                        )
+
+                    )
+                }/>
+
+                <Route path="/login_hint" component={LoginHint}/>
             </div>
         );
     }
